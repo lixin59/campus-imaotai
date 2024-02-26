@@ -91,6 +91,8 @@
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery"
           >重置</el-button
         >
+        <el-button icon="el-icon-location" size="mini" @click="showMaps"
+        >地图</el-button>
       </el-form-item>
     </el-form>
 
@@ -133,24 +135,30 @@
         width="180"
       />
 
-      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+<el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:shop:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:shop:remove']"
-          >删除</el-button>
+            icon="el-icon-map-location"
+            @click="showMap(scope.row)"
+          >地图</el-button>
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-edit"-->
+<!--            @click="handleUpdate(scope.row)"-->
+<!--            v-hasPermi="['system:shop:edit']"-->
+<!--          >修改</el-button>-->
+<!--          <el-button-->
+<!--            size="mini"-->
+<!--            type="text"-->
+<!--            icon="el-icon-delete"-->
+<!--            @click="handleDelete(scope.row)"-->
+<!--            v-hasPermi="['system:shop:remove']"-->
+<!--          >删除</el-button>-->
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -160,19 +168,36 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
+    <el-dialog
+      :visible.sync="open"
+      title="地图"
+      width="800"
+      append-to-body
+      destroy-on-close
+    >
+      <GMap :center="center" :positions="positions" height="800px"/>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { listShop, refreshShop } from "@/api/imt/shop";
+import GMap from "@/components/GMap/GMap.vue";
 
 export default {
   name: "Shop",
+  components: {
+    GMap
+  },
   data() {
     return {
       // 遮罩层
       loading: true,
-
+      center: {
+        lng: 106.674879,
+        lat: 26.620664
+      },
+      positions:[[106.674879, 26.620664]],
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -207,6 +232,25 @@ export default {
     this.getList();
   },
   methods: {
+    showMap(row) {
+      this.center = {
+        lng: row.lng,
+        lat: row.lat
+      }
+      this.positions = [[row.lng, row.lat]]
+      this.open = true
+    },
+    showMaps() {
+      const arr = this.shopList.map(e=> {
+        return [e.lng, e.lat]
+      })
+      this.positions = arr
+      this.center = {
+        lng: arr[0][0],
+        lat: arr[0][1]
+      }
+      this.open = true
+    },
     /** 查询i茅台商品列表 */
     getList() {
       this.loading = true;
@@ -219,7 +263,7 @@ export default {
     // 取消按钮
     cancel() {
       this.open = false;
-      this.reset();
+      // this.reset();
     },
     // 表单重置
     reset() {
