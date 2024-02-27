@@ -119,7 +119,7 @@
     >
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
       <!-- <el-table-column label="ID" align="center" prop="shopId" /> -->
-      <el-table-column label="商品ID" align="center" prop="ishopId" />
+      <el-table-column label="商铺ID" align="center" prop="ishopId" />
       <el-table-column label="省份" align="center" prop="provinceName" />
       <el-table-column label="城市" align="center" prop="cityName" />
       <el-table-column label="地区" align="center" prop="districtName" />
@@ -171,7 +171,7 @@
     <el-dialog
       :visible.sync="open"
       title="地图"
-      width="800"
+      width="1200px"
       append-to-body
       destroy-on-close
     >
