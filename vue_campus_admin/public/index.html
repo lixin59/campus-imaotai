@@ -8,6 +8,11 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <title><%= webpackConfig.name %></title>
     <!--[if lt IE 11]><script>window.location.href='/html/ie.html';</script><![endif]-->
+    <script type="text/javascript">
+      window._AMapSecurityConfig = {
+        serviceHost: "<%= VUE_APP_GMAP_SERVICE_HOST %>", //例如 ：serviceHost:'http://1.1.1.1:80/_AMapService',
+      };
+    </script>
 	  <style>
     html,
     body,
@@ -203,6 +208,6 @@
 		    <div class="loader-section section-right"></div>
 		    <div class="load_title">正在加载系统资源，请耐心等待</div>
         </div>
-	</div>
+	  </div>
   </body>
 </html>
